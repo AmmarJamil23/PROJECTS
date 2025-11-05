@@ -9,6 +9,7 @@ const ChatWindow = () => {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
 
   // Listen for incoming messages
   useEffect(() => {
@@ -18,26 +19,62 @@ const ChatWindow = () => {
       setMessages((prev) => [...prev, msg]);
     });
 
-    return () => socket.off("receive_message");
+    // Listen for typing status
+    socket.on("typing_start", () => setIsTyping(true));
+    socket.on("typing_stop", () => setIsTyping(false));
+
+    return () => {
+      socket.off("receive_message");
+      socket.off("typing_start");
+      socket.off("typing_stop");
+    };
   }, [socket]);
+
+  // Handle typing indicator
+  const handleTyping = (e) => {
+    setInput(e.target.value);
+
+    if (!socket) return;
+
+    // Notify others that this user started typing
+    socket.emit("typing_start", {
+      conversationId: "temp",
+      recipientId: "placeholderRecipient",
+    });
+
+    // Stop typing after 1 second of no input
+    clearTimeout(window.typingTimeout);
+    window.typingTimeout = setTimeout(() => {
+      socket.emit("typing_stop", {
+        conversationId: "temp",
+        recipientId: "placeholderRecipient",
+      });
+    }, 1000);
+  };
 
   // Send message
   const handleSend = () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !socket) return;
 
     const messageData = {
       conversationId: "temp",
       senderId: user.id,
-      recipientId: "placeholderRecipient", // later this will be dynamic
+      recipientId: "placeholderRecipient",
       text: input.trim(),
     };
 
-    // Emit event
+    // Emit message event
     socket.emit("send_message", messageData);
 
-    // Show immediately in UI
+    // Show message instantly in UI
     setMessages((prev) => [...prev, { ...messageData, self: true }]);
     setInput("");
+
+    // Stop typing after send
+    socket.emit("typing_stop", {
+      conversationId: "temp",
+      recipientId: "placeholderRecipient",
+    });
   };
 
   return (
@@ -47,19 +84,26 @@ const ChatWindow = () => {
           <div
             key={index}
             className={`max-w-xs p-2 rounded-lg ${
-              msg.self ? "bg-blue-500 text-white ml-auto" : "bg-white text-gray-800"
+              msg.self
+                ? "bg-blue-500 text-white ml-auto"
+                : "bg-white text-gray-800"
             }`}
           >
             {msg.text}
           </div>
         ))}
+
+        {/* Typing indicator */}
+        {isTyping && (
+          <div className="italic text-gray-500 text-sm">Someone is typing...</div>
+        )}
       </div>
 
       <div className="border-t flex p-2 gap-2 bg-white">
         <Input
           placeholder="Type a message..."
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleTyping}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
         <Button onClick={handleSend}>Send</Button>
