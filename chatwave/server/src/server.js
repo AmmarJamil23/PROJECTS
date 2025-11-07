@@ -44,17 +44,39 @@ io.on('connection', (socket) => {
 
     socket.join(socket.userId.toString());
 
-    socket.on('send_message', (data) => {
-        const { conversationId, senderId, recipientId, text } = data;
+   socket.on("send_message", (data) => {
+  const { conversationId, senderId, recipientId, text } = data;
 
-        io.to(recipientId).emit('receive_message', {
-            conversationId,
-            senderId,
-            text,
-            createdAt: new Date().toISOString()
+  // Broadcast message to recipient instantly
+  io.to(recipientId).emit("receive_message", {
+    conversationId,
+    senderId,
+    text,
+    createdAt: new Date().toISOString(),
+  });
 
-        });
-    });
+  // Update recipient's inbox instantly
+  io.to(recipientId).emit("inbox_update", {
+    conversationId,
+    lastMessage: text,
+    updatedAt: new Date().toISOString(),
+  });
+});
+
+// --- Seen Message ---
+socket.on("message_seen", ({ conversationId, messageId, recipientId }) => {
+  io.to(recipientId).emit("message_seen_update", { conversationId, messageId });
+});
+
+// --- Typing Indicator ---
+socket.on("typing_start", ({ conversationId, recipientId }) => {
+  io.to(recipientId).emit("typing_update", { conversationId, typing: true });
+});
+
+socket.on("typing_stop", ({ conversationId, recipientId }) => {
+  io.to(recipientId).emit("typing_update", { conversationId, typing: false });
+});
+
     socket.on('disconnect', () => {
         console.log(`User disconnnected: ${socket.userId}`);
     });
