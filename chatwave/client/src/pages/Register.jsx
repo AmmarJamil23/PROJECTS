@@ -26,8 +26,14 @@ const Register = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-11/12 sm:w-96">
+    <div className="h-screen flex flex-col items-center justify-center bg-gray-50 space-y-6">
+      {/*  App Name */}
+      <h1 className="text-4xl font-extrabold text-black tracking-wide">
+        ChatWave
+      </h1>
+
+      {/* Register Card */}
+      <Card className="w-11/12 sm:w-96 shadow-md">
         <CardContent className="p-6 space-y-4">
           <h2 className="text-2xl font-semibold text-center">Create Account</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -56,7 +62,7 @@ const Register = () => {
             </Button>
           </form>
           <p
-            className="text-sm text-center text-blue-600 cursor-pointer"
+            className="text-sm text-center text-black cursor-pointer"
             onClick={() => navigate("/login")}
           >
             Already have an account? Login
