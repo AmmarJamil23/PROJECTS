@@ -20,6 +20,9 @@ app.get("/api/v1/health", (req, res) => {
 const PORT = process.env.PORT || 4000;
 connectDB();
 
+const testUserRoutes = require("./routes/testUser");
+app.use("/api/v1/test-user", testUserRoutes)
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 })
