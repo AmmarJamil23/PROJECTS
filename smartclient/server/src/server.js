@@ -21,6 +21,9 @@ const PORT = process.env.PORT || 4000;
 connectDB();
 
 const testUserRoutes = require("./routes/testUser");
+const authRoutes = require("./routes/authRoutes");
+
+app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/test-user", testUserRoutes)
 
 app.listen(PORT, () => {
