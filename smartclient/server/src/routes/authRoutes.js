@@ -1,7 +1,6 @@
 const express = require("express");
 const User = require("../models/User");
-const generateToken = require("../utils/generateToken");
-
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 //REGISTER ROUTE
@@ -62,5 +61,26 @@ router.post("/login", async (req, res) => {
     }
 
 });
+
+router.post("/logout", async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if( !authHeader || !authHeader.startsWith("Bearer ")){
+            return res.status(400).json({ success: false, error: "No token provided"});
+        }
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.decode(token);
+        const exp = decoded?.exp;
+        const now = Math.floor(Date.now() / 1000);
+        const remaining = exp - now;
+
+        if (remaining > 0) await blacklistToken(token, remaining);
+
+        res.json({ success: true, message: "Logged out successfully"});
+
+    } catch(err) {
+        res.status(500).json({ success: false, error: err.message});
+    }
+})
 
 module.exports = router;
