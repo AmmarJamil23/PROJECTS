@@ -1,10 +1,19 @@
 const express = require("express");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const { body } = require("express-validator");
+const validate = require("../middleware/validate");
 const router = express.Router();
 
 //REGISTER ROUTE
-router.post("/register", async (req, res) => {
+router.post("/register",
+    [
+        body("name").trim().notEmpty().withMessage("Name is required"),
+
+        body("email").trim().isEmail().withMessage("Invalid email").normalizeEmail(),
+        body("password").isLength({ min:6}).withMessage("Password must be at least 6 characters long"),
+    ],
+    validate, async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
@@ -32,7 +41,12 @@ router.post("/register", async (req, res) => {
 } );
 
 //LOGIN ROUTE
-router.post("/login", async (req, res) => {
+router.post("/login",
+     [
+        body("email").trim().isEmail().withMessage("Email is invalid").normalizeEmail(),
+        body("password").notEmpty().withMessage("Password is required"),
+     ], 
+     validate, async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -56,7 +70,7 @@ router.post("/login", async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).jsoon({ success: false, error: err.message });
+        res.status(500).json({ success: false, error: err.message });
 
     }
 
