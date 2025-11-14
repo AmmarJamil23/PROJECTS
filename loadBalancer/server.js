@@ -11,7 +11,7 @@ app.use(express.json());
 connectDB();
 
 app.get("/api/health", (req, res) => {
-    res.json( {msg : "API running"});
+    res.json( {msg : "API running", worker: process.pid});
 });
 
 app.use("/api/auth", require("./routes/authRoutes"));
