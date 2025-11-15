@@ -1,7 +1,14 @@
 const express = require("express");
 const {protect, restrictTo } = require("../middleware/authMiddleware");
+const AppError = require("../utils/appError");
 
 const router = express.Router();
+
+
+router.get("/test-error", (req, res, next) => {
+    return next(new AppError("This is a test error", 400));
+});
+
 
 router.get("/profile", protect, (req, res) => {
     res.json({
