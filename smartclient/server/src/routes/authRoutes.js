@@ -3,6 +3,8 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const { body } = require("express-validator");
 const validate = require("../middleware/validate");
+const generateToken = require("../utils/generateToken");
+
 const router = express.Router();
 
 //REGISTER ROUTE
