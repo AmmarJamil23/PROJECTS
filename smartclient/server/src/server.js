@@ -26,11 +26,13 @@ const testUserRoutes = require("./routes/testUser");
 const authRoutes = require("./routes/authRoutes");
 const protectedRoutes = require("./routes/protectedRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 
 app.use("/api/v1/protected", protectedRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/test-user", testUserRoutes);
 app.use("/api/v1/projects", projectRoutes);
+app.use("/api/v1/projects/:projectId/tasks", taskRoutes);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
