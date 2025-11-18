@@ -1,0 +1,23 @@
+Models
+
+The models folder contains all the Mongoose models used for defining the structure of data in MongoDB. Each model describes what fields a database document should have, what type those fields are, and what validations or default values they follow. This folder acts as the blueprint for how your application stores data. For example, models like User, Project, Task, and Comment define how each of those items will look inside the database.
+
+Config
+
+The config folder holds important setup and configuration files that allow the application to run properly. Most commonly, it contains the database connection file (such as db.js), which connects the Node.js server to MongoDB. In larger systems, this folder may also include environment settings, cloud storage configuration, or API service setup. It essentially prepares the application before anything else happens.
+
+Controllers
+
+The controllers folder contains the actual logic for handling API requests. When a route is called, the controller decides what should happen: how to process the request, how to interact with the database, and what response to send back to the client. Controllers help keep the routes clean and organized by separating URL endpoints from the logic. In short, this folder contains the “brains” of your backend operations.
+
+Utils
+
+The utils folder is for storing reusable helper functions or classes that can be used anywhere in the application. These functions do not handle requests directly but support the controllers and middleware by performing small tasks like generating JWT tokens, creating custom errors, formatting data, or sending emails. Utilities help reduce repeated code and keep the project clean and maintainable.
+
+Routes
+
+The routes folder defines all the API endpoints of your backend. Each route file maps a URL path and HTTP method to a specific controller function. Routes should only be responsible for structuring the API, not implementing business logic. For example, routes like /auth/login or /projects/:id simply point to controller functions that handle the actual work. This folder determines how users and clients interact with your API.
+
+Middleware
+
+The middleware folder contains functions that run between the incoming request and the controller. Middleware is used for important checks such as authentication, validation, error handling, and permission control. For example, the protect middleware verifies a user’s JWT token before allowing access to a route, and the validation middleware checks if the incoming data is correct. Middleware improves security, consistency, and cleanliness of the backend.z

@@ -1,0 +1,7 @@
+Purpose of mongoose.Schema.Types.ObjectId
+
+It is used to link one document to another in MongoDB.
+
+In simple words:
+ObjectId creates a relationship between collections.
+It tells Mongoose that this field stores the ID of another document.
