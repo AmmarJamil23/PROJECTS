@@ -44,7 +44,7 @@ export default [
     },
   },
 
-  // Separate configuration for test files (coming later)
+  // Separate configuration for test files
   {
     files: ["**/*.test.js", "**/*.spec.js"],
     rules: {
