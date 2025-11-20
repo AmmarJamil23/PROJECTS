@@ -21,3 +21,5 @@ The routes folder defines all the API endpoints of your backend. Each route file
 Middleware
 
 The middleware folder contains functions that run between the incoming request and the controller. Middleware is used for important checks such as authentication, validation, error handling, and permission control. For example, the protect middleware verifies a user’s JWT token before allowing access to a route, and the validation middleware checks if the incoming data is correct. Middleware improves security, consistency, and cleanliness of the backend.z
+
+#Check installed packages command => npm list --depth=0
