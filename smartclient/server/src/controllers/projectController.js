@@ -1,5 +1,6 @@
 const Project = require("../models/Project");
 const AppError = require("../utils/appError");
+const logActivity = require("../utils/logActivity");
 
 //CREATE
 exports.createProject = async (req, res, next) => {
@@ -12,6 +13,14 @@ exports.createProject = async (req, res, next) => {
             owner: req.user._id,
         });
 
+        await logActivity({
+            req,
+            userId: req.user._id,
+            action: "PROJECT CREATED",
+            targetType: "project",
+            targetId: project._id,
+            metadata: { name: project.name},
+        });
         res.status(201).json({ success: true, project });
 
     } catch (err) {
@@ -61,6 +70,15 @@ exports.updateProject = async (req, res, next) => {
         if (!project){
             return next(new AppError("Project not found", 404));
         }
+
+        await logActivity({
+            req,
+            userId: req.user._id,
+            action: "PROJECT UPDATED",
+            targetType: "project",
+            targetId: project._id,
+            metadata: { status: project.status },
+        })
         res.json({ success: true, project});
 
     } catch(err){
@@ -80,6 +98,15 @@ exports.deleteProject = async (req, res, next) => {
         if (!project){
             return next(new AppError("Project not found", 404));
         }
+
+        await logActivity({
+            req,
+            userId: req.user._id,
+            action: "PROJECT DELETED",
+            targetType: "project",
+            targetId: project._id,
+            metadata: { name: project.name },
+        })
 
         res.json({ success: true, message: "Project deleted"});
 
