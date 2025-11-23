@@ -30,6 +30,7 @@ const taskRoutes = require("./routes/taskRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const fileRoutes = require("./routes/fileRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const aiSummaryRoutes = require("./routes/aiSummaryRoutes");
 
 
 app.use("/api/v1/protected", protectedRoutes);
@@ -39,10 +40,13 @@ app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/projects/:projectId/tasks", taskRoutes);
 app.use("/api/v1/tasks/:taskId/comments", commentRoutes);
 app.use("/api/v1/projects/:projectId/files", fileRoutes);
+app.use("/api/v1/projects/:projectId/ai/summary", aiSummaryRoutes);
 app.use("/api/v1/projects/:projectId/ai", aiRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    console.log("Gemini key:", process.env.GEMINI_API_KEY);
+
 })
