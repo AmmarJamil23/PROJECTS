@@ -1,11 +1,13 @@
 import React from 'react'
+import DashboardPage from './pages/DashboardPage'
 
 const App = () => {
   return (
-    <div>
-      <h1 className='text-3xl p-4'>React Dashboard Front-End</h1>
-      <p>This is just a regular text for checking for the instant reload provided by vite</p>
-    </div>
+   <div className='min-h-screen bg-gray-200 text-gray-900 p-8'>
+   <DashboardPage />
+
+   </div>
+   
   )
 }
 
