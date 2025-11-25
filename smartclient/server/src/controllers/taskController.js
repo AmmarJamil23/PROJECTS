@@ -2,19 +2,21 @@ const Task = require("../models/Task.js");
 const Project = require("../models/Project.js");
 const AppError = require("../utils/appError.js");
 
-const verifyProjectOwner = async (projectId, userId) => {
-    return await Project.findOne({ _id: projectId, owner: userId });
-};
+const { hasProjectAccess, isOwner } = require("../utils/permissions");
 
-// CREATE TASK
+
 exports.createTask = async (req, res, next) => {
     try {
         const { projectId } = req.params;
         const { title, description } = req.body;
 
-        const project = await verifyProjectOwner(projectId, req.user._id);
+        const project = await Project.findById(projectId);
         if (!project) {
             return next(new AppError("Project not found", 404));
+        }
+
+        if (!hasProjectAccess(project, req.user._id)) {
+            return next(new AppError("You do not have access to this project", 403));
         }
 
         const task = await Task.create({
@@ -30,14 +32,17 @@ exports.createTask = async (req, res, next) => {
     }
 };
 
-// GET ALL TASKS FOR ONE PROJECT
 exports.getTasks = async (req, res, next) => {
     try {
         const { projectId } = req.params;
 
-        const project = await verifyProjectOwner(projectId, req.user._id);
+        const project = await Project.findById(projectId);
         if (!project) {
             return next(new AppError("Project not found", 404));
+        }
+
+        if (!hasProjectAccess(project, req.user._id)) {
+            return next(new AppError("You do not have access to this project", 403));
         }
 
         const tasks = await Task.find({ project: projectId });
@@ -48,18 +53,23 @@ exports.getTasks = async (req, res, next) => {
     }
 };
 
-// UPDATE TASK
 exports.updateTask = async (req, res, next) => {
     try {
         const { taskId, projectId } = req.params;
 
-        const project = await verifyProjectOwner(projectId, req.user._id);
+        const project = await Project.findById(projectId);
         if (!project) {
             return next(new AppError("Project not found", 404));
         }
 
+        if (!hasProjectAccess(project, req.user._id)) {
+            return next(new AppError("You do not have access to this project", 403));
+        }
+
+     
+
         const task = await Task.findOneAndUpdate(
-            { _id: taskId, owner: req.user._id, project: projectId },
+            { _id: taskId, project: projectId },
             req.body,
             { new: true, runValidators: true }
         );
@@ -74,19 +84,25 @@ exports.updateTask = async (req, res, next) => {
     }
 };
 
-// DELETE TASK
 exports.deleteTask = async (req, res, next) => {
     try {
         const { taskId, projectId } = req.params;
 
-        const project = await verifyProjectOwner(projectId, req.user._id);
+        const project = await Project.findById(projectId);
         if (!project) {
             return next(new AppError("Project not found", 404));
         }
 
+        if (!hasProjectAccess(project, req.user._id)) {
+            return next(new AppError("You do not have access to this project", 403));
+        }
+
+        if (!isOwner(project, req.user._id)) {
+            return next(new AppError("Only owner can delete tasks", 403));
+        }
+
         const task = await Task.findOneAndDelete({
             _id: taskId,
-            owner: req.user._id,
             project: projectId,
         });
 
@@ -99,3 +115,10 @@ exports.deleteTask = async (req, res, next) => {
         next(err);
     }
 };
+
+
+
+/*
+The Task Controller is responsible for handling all the tasks inside a project, while also making sure that only authorised people can use these features. Before doing anything—whether it is creating a task, getting all tasks, updating a task, or deleting a task—the controller first loads the project using the project ID. Then it checks if the logged-in user has permission through the hasProjectAccess function, which allows both the project owner and the project members. When a new task is created, it is linked with the project and saved with the current user as the task owner. When tasks are fetched, it simply returns all the tasks of that project. For updating and deleting tasks, the same access check is applied, but deleting a task is only allowed for the project owner using the isOwner function. In this way, the controller keeps the system secure: the owner gets full control, and members can still work on tasks without crossing any limits.
+
+*/

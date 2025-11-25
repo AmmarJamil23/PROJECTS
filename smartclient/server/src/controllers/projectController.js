@@ -42,21 +42,24 @@ exports.getProjects = async (req, res, next) => {
 //GET ONE PROJECT
 exports.getProject = async (req, res, next) => {
     try {
-        const project = await Project.findOne({
-            _id: req.params.id,
-            owner: req.user._id,
-        });
+        const projectId = req.params.id;
 
-        if (!project){
+        const project = await Project.findById(projectId);
+        if (!project) {
             return next(new AppError("Project not found", 404));
         }
-        res.json({ success: true, project});
 
-    }
-     catch (err) {
+        if (!hasProjectAccess(project, req.user._id)) {
+            return next(new AppError("Unauthorized: no access to this project", 403));
+        }
+
+        res.json({ success: true, project });
+
+    } catch (err) {
         next(err);
-     }
-}
+    }
+};
+
 
 //UPDATE
 exports.updateProject = async (req, res, next) => {
