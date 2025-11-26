@@ -29,6 +29,7 @@ const projectRoutes = require("./routes/projectRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const projectMembersRoutes = require("./routes/projectMembersRoutes");
+const activityRoutes = require("./routes/activityRoutes");
 const fileRoutes = require("./routes/fileRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 
@@ -41,8 +42,8 @@ app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/projects/:projectId/tasks", taskRoutes);
 app.use("/api/v1/tasks/:taskId/comments", commentRoutes);
 app.use("/api/v1/projects/:projectId/members", projectMembersRoutes);
+app.use("/api/v1/projects/:projectId/activity", activityRoutes);
 app.use("/api/v1/projects/:projectId/files", fileRoutes);
-
 app.use("/api/v1/projects/:projectId/ai", aiRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use(errorHandler);
