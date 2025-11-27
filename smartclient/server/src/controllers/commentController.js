@@ -2,6 +2,7 @@ const Comment = require("../models/Comment");
 const Task = require("../models/Task");
 const Project = require("../models/Project");
 const AppError = require("../utils/appError");
+const createNotification = require("../utils/createNotification");
 
 const { hasProjectAccess, isOwner } = require("../utils/permissions");
 
@@ -37,6 +38,13 @@ exports.createComment = async (req, res, next) => {
         next(err);
     }
 };
+
+await createNotification({
+    users: [task.owner],
+    title: "New Comment",
+    message: `${req.user.name} commented on your task "${task.title}"`,
+    project: task.project
+})
 
 // GET COMMENTS
 exports.getComments = async (req, res, next) => {

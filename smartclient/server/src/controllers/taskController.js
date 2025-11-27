@@ -1,7 +1,7 @@
 const Task = require("../models/Task.js");
 const Project = require("../models/Project.js");
 const AppError = require("../utils/appError.js");
-
+const createNotification = require("../utils/createNotification.js");
 const { hasProjectAccess, isOwner } = require("../utils/permissions");
 
 
@@ -31,6 +31,13 @@ exports.createTask = async (req, res, next) => {
         next(err);
     }
 };
+
+await createNotification({
+    users: [...project.members, project.owner],
+    title: "New Task Added",
+    message: `${req.user.name} added a new task: "${title}"`,
+    project: projectId,
+});
 
 exports.getTasks = async (req, res, next) => {
     try {
