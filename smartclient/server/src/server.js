@@ -32,6 +32,7 @@ const projectMembersRoutes = require("./routes/projectMembersRoutes");
 const activityRoutes = require("./routes/activityRoutes");
 const fileRoutes = require("./routes/fileRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 
 
@@ -45,6 +46,7 @@ app.use("/api/v1/projects/:projectId/members", projectMembersRoutes);
 app.use("/api/v1/projects/:projectId/activity", activityRoutes);
 app.use("/api/v1/projects/:projectId/files", fileRoutes);
 app.use("/api/v1/projects/:projectId/ai", aiRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use(errorHandler);
 

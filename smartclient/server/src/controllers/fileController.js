@@ -2,6 +2,7 @@ const fs = require("fs");
 const File = require("../models/File");
 const Project = require("../models/Project");
 const AppError = require("../utils/appError");
+const createNotification = require("../utils/createNotification");
 const { hasProjectAccess, isOwner } = require("../utils/permissions");
 
 exports.uploadFile = async (req, res, next) => {
@@ -25,12 +26,24 @@ exports.uploadFile = async (req, res, next) => {
             fileType: req.file.mimetype
         });
 
+        const users = Array.from(
+            new Set([...project.members.map(id => id.toString()), project.owner.toString()])
+        );
+
+        await createNotification({
+            users,
+            title: "New File Uploaded",
+            message: `${req.user.name} uploaded a file: ${req.file.originalname}`,
+            project: projectId,
+        });
+
         res.status(201).json({ success: true, file });
 
     } catch (err) {
         next(err);
     }
 };
+
 
 exports.getFiles = async (req, res, next) => {
     try {

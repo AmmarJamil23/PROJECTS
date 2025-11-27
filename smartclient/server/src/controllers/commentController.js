@@ -32,6 +32,15 @@ exports.createComment = async (req, res, next) => {
             user: req.user._id,
         });
 
+        const users = [task.owner.toString()];
+
+        await createNotification({
+            users,
+            title: "New Comment",
+            message: `${req.user.name} commented on your task "${task.title}"`,
+            project: task.project,
+        });
+
         res.status(201).json({ success: true, comment });
 
     } catch (err) {
@@ -39,12 +48,6 @@ exports.createComment = async (req, res, next) => {
     }
 };
 
-await createNotification({
-    users: [task.owner],
-    title: "New Comment",
-    message: `${req.user.name} commented on your task "${task.title}"`,
-    project: task.project
-})
 
 // GET COMMENTS
 exports.getComments = async (req, res, next) => {

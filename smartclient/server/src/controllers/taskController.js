@@ -26,18 +26,30 @@ exports.createTask = async (req, res, next) => {
             owner: req.user._id,
         });
 
+        const usersSet = new Set([
+            ...project.members.map(id => id.toString()),
+            project.owner.toString()
+        ]);
+        const users = Array.from(usersSet);
+
+        try {
+            await createNotification({
+                users,
+                title: "New Task Added",
+                message: `${req.user.name} added a new task: "${title}"`,
+                project: projectId,
+            });
+        } catch (notifErr) {
+            console.error("Failed to create notifications:", notifErr);
+        }
+
         res.status(201).json({ success: true, task });
     } catch (err) {
         next(err);
     }
 };
 
-await createNotification({
-    users: [...project.members, project.owner],
-    title: "New Task Added",
-    message: `${req.user.name} added a new task: "${title}"`,
-    project: projectId,
-});
+
 
 exports.getTasks = async (req, res, next) => {
     try {
