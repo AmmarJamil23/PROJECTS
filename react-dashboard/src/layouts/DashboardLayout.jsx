@@ -8,10 +8,10 @@ function DashboardLayout({ children }) {
       <Sidebar />
 
       {/* Right side content */}
-      <div className="flex flex-col">
+      <div className="flex flex-col bg-gray-100">
         <Navbar />
 
-        <main className="p-6">
+        <main className="p-6 ">
           {children}
         </main>
       </div>
