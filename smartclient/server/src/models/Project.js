@@ -38,4 +38,10 @@ const projectSchema = new mongoose.Schema(
     { timestamps: true}
 );
 
+projectSchema.index({
+    name: "text",
+    description: "text",
+});
+
+
 module.exports = mongoose.model("Project", projectSchema);
