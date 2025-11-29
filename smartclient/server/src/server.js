@@ -33,6 +33,7 @@ const activityRoutes = require("./routes/activityRoutes");
 const fileRoutes = require("./routes/fileRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const searchRoutes = require("./routes/searchRoutes");
 
 
 
@@ -47,6 +48,7 @@ app.use("/api/v1/projects/:projectId/activity", activityRoutes);
 app.use("/api/v1/projects/:projectId/files", fileRoutes);
 app.use("/api/v1/projects/:projectId/ai", aiRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/search", searchRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use(errorHandler);
 

@@ -12,31 +12,48 @@ exports.globalSearch = async (req, res, next) => {
             return res.json({ success: true, result: [] });
         }
 
-            //1) FETCH ALL PROJECTS USER CAN ACCESS
-            const accessibleProjects = await ProjectModel.find({
-                $or: [
-                    { owner: req.user._id },
-                    { members: req.user._id }
+        const accessibleProjects = await Project.find({
+            $or: [
+                { owner: req.user._id },
+                { members: req.user._id }
+            ],
+        }).select("_id");
 
-                ],
-            }).select("_id");
+        const projectIds = accessibleProjects.map((p) => p._id);
 
-            const projectIds = accessibleProjects.map((p) => p._id);
+        const projects = await Project.find({
+            _id: { $in: projectIds },
+            $text: { $search: q },
+        }).select("name description createdAt");
 
-            //SEARCH PROJECTS
-            const projects = await Project.find({
-                _id: { $in: projectIds },
-                $text: { $search: q },
-            }).select("name description createdAt");
+        const tasks = await Task.find({
+            project: { $in: projectIds },
+            $text: { $search: q },
+        }).select("title description status project createdAt");
 
-            //SEARCH TASKS
-            const tasks = await Task.find({
-                project: { $in: projectIds },
-                $text: { $search: q },
-            }).select("title description status project createdAt");
-        
+        const accessibleTasks = await Task.find({
+            project: { $in: projectIds }
+        }).select("_id");
 
-    } catch (err){
+        const taskIds = accessibleTasks.map(t => t._id);
+
+        const comments = await Comment.find({
+            task: { $in: taskIds },
+            $text: { $search: q }
+        })
+        .populate("task", "title project")
+        .populate("user", "name email");
+
+        res.json({
+            success: true,
+            query: q,
+            results: {
+                projects,
+                tasks,
+                comments,
+            },
+        });
+
+    } catch (err) {
         next(err);
-    }
-}
+    }}
