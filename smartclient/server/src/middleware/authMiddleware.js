@@ -34,4 +34,11 @@ const restrictTo = (...roles) => {
     };
 };
 
-module.exports = { protect, restrictTo};
+const adminOnly = (req, res, next) => {
+    if (!req.user.isAdmin) {
+        return res.status(403).json({ success: false, error: "Admins only" });
+    }
+    next();
+}
+
+module.exports = { protect, restrictTo, adminOnly};
