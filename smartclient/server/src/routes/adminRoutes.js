@@ -2,7 +2,7 @@ const express = require("express");
 const { protect, adminOnly} = require("../middleware/authMiddleware");
 
 const {
-    getAllUser,
+    getAllUsers,
     searchUsers,
     freezeUser,
     unfreezeUser,
@@ -12,7 +12,7 @@ const {
 const router = express.Router();
 
 //GET ALL USER
-router.get("/users", protect, adminOnly, getAllUser);
+router.get("/users", protect, adminOnly, getAllUsers);
 
 
 //SEARCH USERS

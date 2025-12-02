@@ -35,6 +35,8 @@ const aiRoutes = require("./routes/aiRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const pdfExportRoutes = require("./routes/pdfExportRoutes");
 
 
 
@@ -51,6 +53,8 @@ app.use("/api/v1/projects/:projectId/ai", aiRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/search", searchRoutes);
 app.use("/api/v1/users", profileRoutes);
+app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/projects/:projectId/export/pdf");
 app.use("/uploads", express.static("uploads"));
 app.use(errorHandler);
 

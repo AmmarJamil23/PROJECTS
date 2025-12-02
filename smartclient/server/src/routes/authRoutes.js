@@ -44,19 +44,28 @@ router.post("/register",
 
 //LOGIN ROUTE
 router.post("/login",
-     [
+    [
         body("email").trim().isEmail().withMessage("Email is invalid").normalizeEmail(),
         body("password").notEmpty().withMessage("Password is required"),
-     ], 
-     validate, async (req, res) => {
+    ],
+    validate, 
+    async (req, res) => {
     try {
         const { email, password } = req.body;
 
         const user = await User.findOne({ email }).select("+password");
-        if (!user) return res.status(401).json({ success: false, error: "Invalid credentials"});
+        if (!user) return res.status(401).json({ success: false, error: "Invalid credentials" });
+
+        //  BLOCK FROZEN OR SOFT-DELETED USERS
+        if (user.isActive === false) {
+            return res.status(403).json({
+                success: false,
+                error: "Account is suspended by admin",
+            });
+        }
 
         const match = await user.matchPassword(password);
-        if (!match) return res.status(401).json({ success: false, error: "Invalid credentials"});
+        if (!match) return res.status(401).json({ success: false, error: "Invalid credentials" });
 
         const token = generateToken(user);
 
@@ -73,10 +82,10 @@ router.post("/login",
 
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
-
     }
-
 });
+
+
 
 router.post("/logout", async (req, res) => {
     try {
