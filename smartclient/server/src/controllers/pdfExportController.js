@@ -29,7 +29,6 @@ exports.exportProjectPDF = async (req, res, next) => {
 
         const filesCount = await File.countDocuments({ project: projectId});
 
-        //START PDF CODE
         const doc = new PDFDocument();
 
         res.setHeader("Content-Type", "application/pdf");
