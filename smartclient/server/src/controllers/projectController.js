@@ -1,6 +1,7 @@
 const Project = require("../models/Project");
 const AppError = require("../utils/appError");
 const logActivity = require("../utils/logActivity");
+const { hasProjectAccess } = require("../utils/permissions"); // make sure this exists
 
 //CREATE
 exports.createProject = async (req, res, next) => {
@@ -19,21 +20,35 @@ exports.createProject = async (req, res, next) => {
             action: "PROJECT CREATED",
             targetType: "project",
             targetId: project._id,
-            metadata: { name: project.name},
+            metadata: { name: project.name },
         });
-        res.status(201).json({ success: true, project });
 
+        res.status(201).json({ success: true, project });
     } catch (err) {
         next(err);
     }
 };
 
-//GET ALL (only ones owned by user)
+//GET ALL (owner OR member, with archive filter)
 exports.getProjects = async (req, res, next) => {
     try {
-        const projects = await Project.find({ owner: req.user._id});
-        res.json({ success: true, projects });
+        const filter = {
+            $or: [
+                { owner: req.user._id },
+                { members: req.user._id }
+            ],
+        };
 
+        // Optional filtering: /projects?archived=true
+        if (req.query.archived === "true") {
+            filter.isArchived = true;
+        } else {
+            filter.isArchived = false;
+        }
+
+        const projects = await Project.find(filter);
+
+        res.json({ success: true, projects });
     } catch (err) {
         next(err);
     }
@@ -60,7 +75,6 @@ exports.getProject = async (req, res, next) => {
     }
 };
 
-
 //UPDATE
 exports.updateProject = async (req, res, next) => {
     try {
@@ -70,7 +84,7 @@ exports.updateProject = async (req, res, next) => {
             { new: true, runValidators: true }
         );
 
-        if (!project){
+        if (!project) {
             return next(new AppError("Project not found", 404));
         }
 
@@ -81,16 +95,15 @@ exports.updateProject = async (req, res, next) => {
             targetType: "project",
             targetId: project._id,
             metadata: { status: project.status },
-        })
-        res.json({ success: true, project});
+        });
 
-    } catch(err){
+        res.json({ success: true, project });
+    } catch (err) {
         next(err);
     }
 };
 
 //DELETE
-
 exports.deleteProject = async (req, res, next) => {
     try {
         const project = await Project.findOneAndDelete({
@@ -98,7 +111,7 @@ exports.deleteProject = async (req, res, next) => {
             owner: req.user._id,
         });
 
-        if (!project){
+        if (!project) {
             return next(new AppError("Project not found", 404));
         }
 
@@ -109,11 +122,10 @@ exports.deleteProject = async (req, res, next) => {
             targetType: "project",
             targetId: project._id,
             metadata: { name: project.name },
-        })
+        });
 
-        res.json({ success: true, message: "Project deleted"});
-
-    } catch (err){
+        res.json({ success: true, message: "Project deleted" });
+    } catch (err) {
         next(err);
     }
-}
+};

@@ -5,18 +5,20 @@ const createNotification = require("../utils/createNotification.js");
 const { hasProjectAccess, isOwner } = require("../utils/permissions");
 
 
+// CREATE TASK
 exports.createTask = async (req, res, next) => {
     try {
         const { projectId } = req.params;
         const { title, description } = req.body;
 
         const project = await Project.findById(projectId);
-        if (!project) {
-            return next(new AppError("Project not found", 404));
-        }
+        if (!project) return next(new AppError("Project not found", 404));
 
-        if (!hasProjectAccess(project, req.user._id)) {
+        if (!hasProjectAccess(project, req.user._id)) 
             return next(new AppError("You do not have access to this project", 403));
+
+        if (project.isArchived) {
+            return next(new AppError("Cannot modify archived project", 403));
         }
 
         const task = await Task.create({
@@ -50,42 +52,41 @@ exports.createTask = async (req, res, next) => {
 };
 
 
-
+// GET ALL TASKS
 exports.getTasks = async (req, res, next) => {
     try {
         const { projectId } = req.params;
 
         const project = await Project.findById(projectId);
-        if (!project) {
-            return next(new AppError("Project not found", 404));
-        }
+        if (!project) return next(new AppError("Project not found", 404));
 
-        if (!hasProjectAccess(project, req.user._id)) {
+        if (!hasProjectAccess(project, req.user._id))
             return next(new AppError("You do not have access to this project", 403));
-        }
+
 
         const tasks = await Task.find({ project: projectId });
-
         res.json({ success: true, tasks });
+
     } catch (err) {
         next(err);
     }
 };
 
+
+// UPDATE TASK
 exports.updateTask = async (req, res, next) => {
     try {
         const { taskId, projectId } = req.params;
 
         const project = await Project.findById(projectId);
-        if (!project) {
-            return next(new AppError("Project not found", 404));
-        }
+        if (!project) return next(new AppError("Project not found", 404));
 
-        if (!hasProjectAccess(project, req.user._id)) {
+        if (!hasProjectAccess(project, req.user._id))
             return next(new AppError("You do not have access to this project", 403));
-        }
 
-     
+        if (project.isArchived) {
+            return next(new AppError("Cannot modify archived project", 403));
+        }
 
         const task = await Task.findOneAndUpdate(
             { _id: taskId, project: projectId },
@@ -93,27 +94,29 @@ exports.updateTask = async (req, res, next) => {
             { new: true, runValidators: true }
         );
 
-        if (!task) {
-            return next(new AppError("Task not found", 404));
-        }
+        if (!task) return next(new AppError("Task not found", 404));
 
         res.json({ success: true, task });
+
     } catch (err) {
         next(err);
     }
 };
 
+
+// DELETE TASK
 exports.deleteTask = async (req, res, next) => {
     try {
         const { taskId, projectId } = req.params;
 
         const project = await Project.findById(projectId);
-        if (!project) {
-            return next(new AppError("Project not found", 404));
-        }
+        if (!project) return next(new AppError("Project not found", 404));
 
-        if (!hasProjectAccess(project, req.user._id)) {
+        if (!hasProjectAccess(project, req.user._id))
             return next(new AppError("You do not have access to this project", 403));
+
+        if (project.isArchived) {
+            return next(new AppError("Cannot modify archived project", 403));
         }
 
         if (!isOwner(project, req.user._id)) {
@@ -125,15 +128,14 @@ exports.deleteTask = async (req, res, next) => {
             project: projectId,
         });
 
-        if (!task) {
-            return next(new AppError("Task not found", 404));
-        }
+        if (!task) return next(new AppError("Task not found", 404));
 
         res.json({ success: true, message: "Task deleted" });
     } catch (err) {
         next(err);
     }
 };
+
 
 
 

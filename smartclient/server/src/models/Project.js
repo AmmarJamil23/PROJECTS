@@ -34,6 +34,11 @@ const projectSchema = new mongoose.Schema(
             default: "active",
         },
 
+        isArchived: {
+            type: Boolean,
+            default: false,
+        },
+
     },
     { timestamps: true}
 );
