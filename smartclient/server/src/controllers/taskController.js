@@ -3,7 +3,7 @@ const Project = require("../models/Project.js");
 const AppError = require("../utils/appError.js");
 const createNotification = require("../utils/createNotification.js");
 const { hasProjectAccess, isOwner } = require("../utils/permissions");
-
+const paginate = require("../utils/paginate.js");
 
 // CREATE TASK
 exports.createTask = async (req, res, next) => {
@@ -54,22 +54,30 @@ exports.createTask = async (req, res, next) => {
 
 // GET ALL TASKS
 exports.getTasks = async (req, res, next) => {
-    try {
-        const { projectId } = req.params;
+  try {
+    const { projectId } = req.params;
 
-        const project = await Project.findById(projectId);
-        if (!project) return next(new AppError("Project not found", 404));
+    const project = await Project.findById(projectId);
+    if (!project) return next(new AppError("Project not found", 404));
+    if (!hasProjectAccess(project, req.user._id))
+      return next(new AppError("Unauthorized", 403));
 
-        if (!hasProjectAccess(project, req.user._id))
-            return next(new AppError("You do not have access to this project", 403));
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
 
+    const result = await paginate(
+      Task,
+      { project: projectId },
+      page,
+      limit,
+      null,          
+      { createdAt: -1 }
+    );
 
-        const tasks = await Task.find({ project: projectId });
-        res.json({ success: true, tasks });
-
-    } catch (err) {
-        next(err);
-    }
+    res.json({ success: true, ...result });
+  } catch (err) {
+    next(err);
+  }
 };
 
 
