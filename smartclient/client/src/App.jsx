@@ -1,4 +1,5 @@
 import React from 'react'
+import Login from './pages/Login';
 
 const App = () => {
   return (
@@ -10,8 +11,9 @@ const App = () => {
       <p className='text-muted-foreground mt-2'>
         Here the SmartClient Frontend will be displayed
         </p>
+        <Login />
     </div>
   )
 }
 
-export default App
+export default App;
