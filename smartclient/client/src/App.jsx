@@ -27,9 +27,8 @@ export default function App() {
         <Route 
         path="/dashboard"
         element={
-          <RequireAuth>
             <Dashboard />
-          </RequireAuth>
+          
         }
         />
 
