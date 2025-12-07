@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuthStore } from "./features/auth/useAuthStore";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
-// import Dashboard from "@/pages/Dashboard"
+import Dashboard from "@/pages/Dashboard"
 import RequireAuth from "./features/auth/RequireAuth";
 
 export default function App() {
@@ -18,6 +18,7 @@ export default function App() {
     <BrowserRouter>
     {/* Public Routes */}
       <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -27,7 +28,7 @@ export default function App() {
         path="/dashboard"
         element={
           <RequireAuth>
-            {/* <Dashboard /> */}
+            <Dashboard />
           </RequireAuth>
         }
         />
