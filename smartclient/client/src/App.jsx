@@ -5,6 +5,8 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard"
 import RequireAuth from "./features/auth/RequireAuth";
+import Projects from "./pages/Projects";
+
 
 export default function App() {
   const finishLoading = useAuthStore((s) => s.finishLoading);
@@ -31,6 +33,13 @@ export default function App() {
           
         }
         />
+
+        <Route
+        path="/dashboard/projects"
+        element={
+          <Projects />
+        }
+         />
 
       </Routes>
     </BrowserRouter>

@@ -1,16 +1,12 @@
-import React from 'react'
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 
-
-const useProjects = () => {
+export function useProjects() {
   return useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
-        const res = await api.get("/projects");
-        return res.data.projects;
-    }
-  })
+      const res = await api.get("/projects");
+      return res.data.projects;
+    },
+  });
 }
-
-export default useProjects
