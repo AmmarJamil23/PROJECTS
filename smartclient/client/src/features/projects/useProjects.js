@@ -1,12 +1,26 @@
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
+import React from "react";
 
 export function useProjects() {
-  return useQuery({
-    queryKey: ["projects"],
-    queryFn: async () => {
-      const res = await api.get("/projects");
-      return res.data.projects;
-    },
-  });
+  // Dummy data for UI only
+  return {
+    data: [
+      {
+        _id: "1",
+        name: "Website Redesign",
+        description: "Updating the old company site with a modern UI"
+      },
+      {
+        _id: "2",
+        name: "Mobile App Development",
+        description: "Building new React Native application for clients"
+      },
+      {
+        _id: "3",
+        name: "Marketing Campaign",
+        description: "SEO, ads, brand positioning, content planning"
+      },
+    ],
+    isLoading: false
+  };
 }
+

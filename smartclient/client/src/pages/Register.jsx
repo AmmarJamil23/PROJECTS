@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
+
 import AuthLayout from "@/layouts/AuthLayout";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -10,11 +12,13 @@ import { toast } from "sonner";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Too short"),
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: { name: "", email: "", password: "" },
@@ -22,8 +26,11 @@ export default function Register() {
 
   const onSubmit = async (values) => {
     try {
-      await api.post("/auth/register", values);
-      toast.success("Account created! You can now login.");
+      const res = await api.post("/auth/register", values);
+
+      toast.success("Account created. You can now log in.", res);
+
+      navigate("/login");
     } catch (err) {
       toast.error(err.response?.data?.error || "Registration failed");
     }
@@ -34,7 +41,7 @@ export default function Register() {
       <h1 className="text-2xl font-bold mb-6 text-center">Create Account</h1>
 
       <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
           <FormField
             control={form.control}
@@ -72,7 +79,10 @@ export default function Register() {
             )}
           />
 
-          <Button type="submit" className="w-full">Register</Button>
+          <Button type="submit" className="w-full">
+            Register
+          </Button>
+
         </form>
       </Form>
     </AuthLayout>

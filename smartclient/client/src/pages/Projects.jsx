@@ -3,6 +3,8 @@ import { useProjects } from "@/features/projects/useProjects";
 import ProjectCard from "@/components/projects/ProjectCard";
 import ProjectCardSkeleton from "@/components/projects/ProjectCardSkeleton";
 import { Button } from "@/components/ui/button";
+import CreateProjectModal from "@/components/projects/CreateProjectModal";
+
 
 export default function Projects() {
   const { data: projects, isLoading } = useProjects();
@@ -11,7 +13,8 @@ export default function Projects() {
     <DashboardLayout>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Projects</h2>
-        <Button>Create Project</Button>
+        <CreateProjectModal />
+
       </div>
 
       {isLoading && (
