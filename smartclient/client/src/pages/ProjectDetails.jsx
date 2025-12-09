@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import DashboardLayout from "@/layouts/DashboardLayout";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-
+import TasksTab from "@/components/tasks/TasksTab";
 // MULTIPLE DUMMY PROJECTS
 const dummyProjects = [
   {
@@ -49,9 +49,7 @@ export default function ProjectDetails() {
           <p className="text-muted-foreground">Overview content coming soon...</p>
         </TabsContent>
 
-        <TabsContent value="tasks" className="mt-6">
-          <p className="text-muted-foreground">Tasks UI coming soon...</p>
-        </TabsContent>
+        <TasksTab projectId={projectId} />
 
         <TabsContent value="members" className="mt-6">
           <p className="text-muted-foreground">Members UI coming soon...</p>
