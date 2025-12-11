@@ -5,6 +5,7 @@ import TasksTab from "@/components/tasks/TasksTab";
 import MembersTab from "@/components/members/MembersTab";
 import ActivityTab from "@/components/activity/ActivityTab";
 import FilesTab from "@/components/files/FilesTab";
+import OverviewTab from "@/components/overview/OverviewTab";
 // MULTIPLE DUMMY PROJECTS
 const dummyProjects = [
   {
@@ -48,9 +49,9 @@ export default function ProjectDetails() {
           <TabsTrigger value="files">Files</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-6">
-          <p className="text-muted-foreground">Overview content coming soon...</p>
-        </TabsContent>
+       <TabsContent value="overview" className="mt-6">
+        <OverviewTab />
+       </TabsContent>
 
         <TasksTab projectId={projectId} />
 
