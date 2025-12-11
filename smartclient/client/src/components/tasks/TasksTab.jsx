@@ -1,6 +1,6 @@
 import { useProjectTasks } from "@/features/tasks/useProjectTasks";
 import TaskCard from "./TaskCard";
-import AddTaskButton from "./AddTaskButton";
+import CreateTaskModal from "./CreateTaskModal";
 
 export default function TasksTab({ projectId }) {
   const { data: tasks, isLoading } = useProjectTasks(projectId);
@@ -10,7 +10,8 @@ export default function TasksTab({ projectId }) {
       {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">Tasks</h2>
-        <AddTaskButton />
+        <CreateTaskModal />
+
       </div>
 
       {/* List */}
