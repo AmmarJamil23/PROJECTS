@@ -5,6 +5,7 @@ import { useAuthStore } from '@/features/auth/useAuthStore';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import NotificationsDropdown from '../notifications/NotificationsDropdown';
+import GlobalSearch from '../search/GlobalSearch';
 
 
 const Topbar = ({ setOpen }) => {
@@ -27,11 +28,14 @@ const Topbar = ({ setOpen }) => {
         <Menu size={20} />
       </Button>
 
-      <h1 className="text-lg font-semibold">Dashboard</h1>
+      <h1 className="text-lg font-semibold mr-3">Dashboard</h1>
 
+        <GlobalSearch />
       {/* User avatar */}
       <div className="flex items-center gap-2">
+
         <NotificationsDropdown />
+
         <Avatar className="h-8 w-8 cursor-pointer">
           <AvatarFallback>
             {user?.name?.charAt(0)?.toUpperCase() || "?"}

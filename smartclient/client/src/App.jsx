@@ -5,6 +5,7 @@ import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Projects from "@/pages/Projects";
 import ProjectDetails from "@/pages/ProjectDetails";
+import Settings from "./pages/Settings";
 
 
 export default function App() {
@@ -21,6 +22,9 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="/dashboard/projects" element={<Projects />} />
+
+        <Route path="/dashboard/settings" element={ <Settings /> } />
+
 
         <Route path="/dashboard/projects/:projectId" element={<ProjectDetails />}
 />
