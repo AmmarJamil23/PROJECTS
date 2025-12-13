@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from '@/features/auth/useAuthStore';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import NotificationsDropdown from '../notifications/NotificationsDropdown';
 
 
 const Topbar = ({ setOpen }) => {
@@ -30,6 +31,7 @@ const Topbar = ({ setOpen }) => {
 
       {/* User avatar */}
       <div className="flex items-center gap-2">
+        <NotificationsDropdown />
         <Avatar className="h-8 w-8 cursor-pointer">
           <AvatarFallback>
             {user?.name?.charAt(0)?.toUpperCase() || "?"}
