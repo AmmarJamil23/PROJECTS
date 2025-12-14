@@ -6,6 +6,7 @@ import Dashboard from "@/pages/Dashboard";
 import Projects from "@/pages/Projects";
 import ProjectDetails from "@/pages/ProjectDetails";
 import Settings from "./pages/Settings";
+import Members from "./pages/Members";
 
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
 
         <Route path="/dashboard/settings" element={ <Settings /> } />
 
+        <Route path="/dashboard/members" element= { <Members /> } />
 
         <Route path="/dashboard/projects/:projectId" element={<ProjectDetails />}
 />
