@@ -4,16 +4,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 
 import AuthLayout from "@/layouts/AuthLayout";
-import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormItem, FormLabel, FormField, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormItem,
+  FormLabel,
+  FormField,
+  FormMessage
+} from "@/components/ui/form";
 import { toast } from "sonner";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Too short"),
   email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters")
 });
 
 export default function Register() {
@@ -21,28 +26,33 @@ export default function Register() {
 
   const form = useForm({
     resolver: zodResolver(registerSchema),
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: {
+      name: "",
+      email: "",
+      password: ""
+    }
   });
 
-  const onSubmit = async (values) => {
-    try {
-      const res = await api.post("/auth/register", values);
+  const onSubmit = (values) => {
+    // DEMO MODE: no backend, no auth
+    console.log("Registered user", values);
 
-      toast.success("Account created. You can now log in.", res);
+    toast.success("Account created successfully");
 
-      navigate("/login");
-    } catch (err) {
-      toast.error(err.response?.data?.error || "Registration failed");
-    }
+    navigate("/dashboard");
   };
 
   return (
     <AuthLayout>
-      <h1 className="text-2xl font-bold mb-6 text-center">Create Account</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        Create Account
+      </h1>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
           <FormField
             control={form.control}
             name="name"
@@ -61,7 +71,11 @@ export default function Register() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
-                <Input type="email" {...field} placeholder="you@example.com" />
+                <Input
+                  type="email"
+                  {...field}
+                  placeholder="you@example.com"
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -73,7 +87,11 @@ export default function Register() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
-                <Input type="password" {...field} placeholder="******" />
+                <Input
+                  type="password"
+                  {...field}
+                  placeholder="******"
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -82,7 +100,6 @@ export default function Register() {
           <Button type="submit" className="w-full">
             Register
           </Button>
-
         </form>
       </Form>
     </AuthLayout>
