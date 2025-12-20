@@ -1,10 +1,23 @@
 import React from 'react'
+import RenderCounter from './RenderCounter'
+import { useState } from "react"
 
 const App = () => {
+  const [count, setCount] = useState(0);
   return (
-    <div className='p-5'>
-      <h1 className='text-4xl'>React Render Lab</h1>
-      <p>All the renders in the console tab</p>
+    <div className='min-h-screen bg-gray-900 text-white p-6 space-y-4'>
+      <h1 className='text-2xl font-bold'>React Render Lab</h1>
+
+      <button className='px-4 py-2 bg-green-400 rounded'
+      onClick={() => setCount(count + 1)}
+      >
+        Increment
+      </button>
+
+      <p>Count value: {count}</p>
+
+      <RenderCounter label="App Component" />
+      
       </div>
   )
 }
