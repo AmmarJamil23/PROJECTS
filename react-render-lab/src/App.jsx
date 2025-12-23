@@ -1,14 +1,36 @@
 import React from 'react'
 import RenderCounter from './RenderCounter'
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import Child from './Child';
 
 const App = () => {
+
+
   const [count, setCount] = useState(0);
+
 
   const handleClick = useCallback(() => {
     console.log("Clicked");
   }, []);
+
+
+  useEffect(() => {
+  console.log("effect ran");
+  }, [count]);
+
+
+  useEffect(() => {
+    const onResize = () => {
+      console.log("windows resized");
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize)
+    }
+  }, [])
+
 
   return (
     <div className='min-h-screen bg-gray-900 text-white p-6 space-y-4'>
@@ -17,7 +39,7 @@ const App = () => {
       <button className='px-4 py-2 bg-green-400 rounded font-bold'
       onClick={() => setCount(count + 1)}
       >
-        Increment
+        Increment 
       </button>
 
       <p className='mt-2'>Count value: {count}</p>
