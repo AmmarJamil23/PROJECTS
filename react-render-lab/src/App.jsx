@@ -18,6 +18,8 @@ const App = () => {
 
   const [showDone, setShowDone] = useState(false);
 
+  const [activity, setActivity] = useState([]);
+
   const visibleTasks = showDone ? tasks.filter((t) => t.done) : tasks;
 
 
@@ -44,8 +46,32 @@ const App = () => {
     return () => {
       window.removeEventListener("resize", onResize)
     }
-  }, [])
+  }, []);
 
+
+  const toggleTask = useCallback((id) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id
+         ? { ...task, done: !task.done } : task
+    )
+  );
+
+  setActivity((prev) => [
+    ...prev,
+    `Task ${id} toggled`
+  ]);
+
+  }, []);
+
+
+  // useEffect(() => {
+  //   const id = setInterval(() => {
+  //     setCount(count + 1);
+  //   }, 1000);
+
+  //   return () => clearInterval(id);
+  // })
 
   return (
     <div className='min-h-screen bg-gray-900 text-white p-6 space-y-4'>
@@ -107,6 +133,29 @@ const App = () => {
       >
         Add Task
       </button>
+
+      <ul className='mt-4 space-y-2'>
+        {visibleTasks.map((task) => (
+          <li
+          key={task.id}
+          className='cursor-pointer'
+          onClick={() => toggleTask(task.id)}
+          >
+            {task.title} {task.done ? "(done)" : ""}
+          </li>
+        ))}
+      </ul>
+
+
+      <h2 className='mt-6 text-2xl font-bold'>Activity</h2>
+        <ul className='text-sm text-gray-500'>
+          {activity.map((a, i) => (
+            <li key={i}>{a}</li>
+          ))}
+        </ul>
+
+
+      
       
       </div>
   )
