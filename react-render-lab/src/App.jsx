@@ -2,6 +2,8 @@ import React from 'react'
 import RenderCounter from './RenderCounter'
 import { useState, useCallback, useEffect } from "react"
 import Child from './Child';
+import { useContext } from "react"
+import { ThemeContext } from './ThemeContext';
 
 const App = () => {
 
@@ -22,6 +24,7 @@ const App = () => {
 
   const visibleTasks = showDone ? tasks.filter((t) => t.done) : tasks;
 
+  const { theme, toggleTheme} = useContext(ThemeContext);
 
 
 
@@ -153,6 +156,20 @@ const App = () => {
             <li key={i}>{a}</li>
           ))}
         </ul>
+
+
+        <div
+        className={`min-h-screen p-6 ${
+          theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-white"
+        }`}
+        >
+          <button
+          className='px-4 py-2 bg-blue-600 rounded'
+          onClick={toggleTheme}
+          >
+            Toggle Theme
+          </button>
+        </div>
 
 
       
