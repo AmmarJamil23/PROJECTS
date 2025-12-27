@@ -1,181 +1,41 @@
-import React from 'react'
-import RenderCounter from './RenderCounter'
-import { useState, useCallback, useEffect } from "react"
-import Child from './Child';
-import { useContext } from "react"
-import { ThemeContext } from './ThemeContext';
-
-const App = () => {
-
-
-  const [count, setCount] = useState(0);
-
-  const doubleCount = count * 2;
-
-  const [tasks, setTasks] = useState([
-    { id: 1, title: "Learn React", done: false },
-    { id: 2, title: "Practice hooks", done: true},
-    { id: 3, title: "Build project", done: false}
-  ]);
-
-  const [showDone, setShowDone] = useState(false);
-
-  const [activity, setActivity] = useState([]);
-
-  const visibleTasks = showDone ? tasks.filter((t) => t.done) : tasks;
-
-  const { theme, toggleTheme} = useContext(ThemeContext);
-
-
-
-
-  const handleClick = useCallback(() => {
-    console.log("Clicked");
-  }, []);
-
-
-  useEffect(() => {
-  console.log("effect ran");
-  }, [count]);
-
-
-  useEffect(() => {
-    const onResize = () => {
-      console.log("windows resized");
-    };
-
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      window.removeEventListener("resize", onResize)
-    }
-  }, []);
-
-
-  const toggleTask = useCallback((id) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-         ? { ...task, done: !task.done } : task
-    )
-  );
-
-  setActivity((prev) => [
-    ...prev,
-    `Task ${id} toggled`
-  ]);
-
-  }, []);
-
-
-  // useEffect(() => {
-  //   const id = setInterval(() => {
-  //     setCount(count + 1);
-  //   }, 1000);
-
-  //   return () => clearInterval(id);
-  // })
-
+function App() {
   return (
-    <div className='min-h-screen bg-gray-900 text-white p-6 space-y-4'>
-      <h1 className='text-2xl font-bold'>React Render Lab</h1>
+    <div className="min-h-screen bg-black text-white p-8">
+      <h1 className="text-3xl font-bold mb-6">
+        React Behavior Visualizer
+      </h1>
 
-      <button className='px-4 py-2 bg-green-400 rounded font-bold'
-      onClick={() => {
-        setCount(count + 1);
-
-      }}
-      >
-        Increment 
-      </button>
-
-      <button
-      className='mt-2 px-4 py-2 bg-orange-600 rounded'
-      onClick={() => setCount(count + 1)}
-      >
-        Increment Count Only
-      </button>
-
-      <p className='mt-2'>Count value: {count}</p>
-
-      <p>Double Count: {doubleCount}</p>
-
-      <RenderCounter label="App Component" />
-
-      <Child onClick={handleClick} />
-
-      <ul className='mt-2 space-y-2'>
-        {visibleTasks.map((task) => (
-          <li key={task.id}>
-            {task.title} {task.done ? "(done)" : ""}
-
-          </li>
-        ))}
-      </ul>
-
-      <button className='mt-4 px-4 py-2 bg-blue-600 rounded'
-      onClick={() => {
-        setShowDone(!showDone);
-      }}
-      >
-        Toggle Done Tasks
-      </button>
-
-    <button
-        className='mt-2 px-4 py-2 bg-green-400 rounded'
-        onClick={() => {
-          // 1. Add the new task as usual
-          setTasks([
-            ...tasks,
-            { id: Date.now(), title: "New Task", done: false },
-          ]);
-
-         
-          setShowDone(false);
-        }}
-      >
-        Add Task
-      </button>
-
-      <ul className='mt-4 space-y-2'>
-        {visibleTasks.map((task) => (
-          <li
-          key={task.id}
-          className='cursor-pointer'
-          onClick={() => toggleTask(task.id)}
-          >
-            {task.title} {task.done ? "(done)" : ""}
-          </li>
-        ))}
-      </ul>
-
-
-      <h2 className='mt-6 text-2xl font-bold'>Activity</h2>
-        <ul className='text-sm text-gray-500'>
-          {activity.map((a, i) => (
-            <li key={i}>{a}</li>
-          ))}
-        </ul>
-
-
-        <div
-        className={`min-h-screen p-6 ${
-          theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-white"
-        }`}
-        >
-          <button
-          className='px-4 py-2 bg-blue-600 rounded'
-          onClick={toggleTheme}
-          >
-            Toggle Theme
-          </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-zinc-900 rounded-lg p-4">
+          <h2 className="font-semibold mb-2">Component Renders</h2>
+          <p className="text-gray-400 text-sm">
+            Visualize how often components rerender
+          </p>
         </div>
 
+        <div className="bg-zinc-900 rounded-lg p-4">
+          <h2 className="font-semibold mb-2">State Changes</h2>
+          <p className="text-gray-400 text-sm">
+            Track which state triggered updates
+          </p>
+        </div>
 
-      
-      
+        <div className="bg-zinc-900 rounded-lg p-4">
+          <h2 className="font-semibold mb-2">Effects</h2>
+          <p className="text-gray-400 text-sm">
+            See when effects run and clean up
+          </p>
+        </div>
+
+        <div className="bg-zinc-900 rounded-lg p-4">
+          <h2 className="font-semibold mb-2">Performance</h2>
+          <p className="text-gray-400 text-sm">
+            Detect unnecessary rerenders
+          </p>
+        </div>
       </div>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
