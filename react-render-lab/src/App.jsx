@@ -1,13 +1,36 @@
+import { useState } from "react";
+import RenderBox from "./components/RenderBox";
+import ChildBox from "./components/ChildBox";
+
 function App() {
+  const [count, setCount] = useState(0);
+
+
+
   return (
     <div className="min-h-screen bg-black text-white p-8">
       <h1 className="text-3xl font-bold mb-6">
         React Behavior Visualizer
       </h1>
 
+      <button
+      className="mb-6 px-4 py-2 bg-white text-black rounded"
+      onClick={() => setCount(count + 1)}
+      >
+        Trigger State Change
+      </button>
+
+
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <RenderBox name="App Component" />
+        <ChildBox />
+
         <div className="bg-zinc-900 rounded-lg p-4">
           <h2 className="font-semibold mb-2">Component Renders</h2>
+
+          <RenderBox name="Render Panel" />
           <p className="text-gray-400 text-sm">
             Visualize how often components rerender
           </p>
