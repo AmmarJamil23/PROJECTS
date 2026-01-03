@@ -19,6 +19,8 @@ const App = () => {
     },
   ]);
 
+  const [selectedDay, setSelectedDay] = useState("All");
+
   const toggleCompleted = (id) => {
     setSessions((prevSessions) =>
       prevSessions.map((session) =>
@@ -26,6 +28,18 @@ const App = () => {
       ? { ...session, completed: !session.completed }
       : session));
   };
+
+  const totalSessions = sessions.length;
+  const completedSessions = sessions.filter(
+    (session) => session.completed
+  ).length;
+
+  const visibleSessions = 
+  selectedDay === "All"
+  ? sessions
+  : sessions.filter(
+    (session) => session.day === selectedDay
+  );
 
 
 
@@ -42,6 +56,29 @@ const App = () => {
           Plan your study sessions clearly
         </p>
 
+        <div className='mb-4 flex gap-2'>
+          {["All", "Monday", "Tuesday", "Wednesday"].map((day) => (
+            <button
+            key={day}
+            onClick={() => setSelectedDay(day)}
+            className={`px-3 py-1 rounded text-sm ${
+              selectedDay === day
+              ? "bg-white text-black"
+              : "bg-zinc-800 text-gray-300"
+            }`}
+            >
+              {day}
+
+            </button>
+          ))}   
+          
+        </div>
+
+        <div className='flex justify-between mb-4 text-sm text-gray-300'>
+          <p>Total: {totalSessions}</p>
+          <p>Completed: {completedSessions}</p>
+        </div>
+
 
         <div className='border border-zinc-700 rounded p-4'>
           <p className='text-gray-500'>
@@ -50,7 +87,7 @@ const App = () => {
         </div>
 
         <div className='space-y-3'>
-          {sessions.map((session) => (
+          {visibleSessions.map((session) => (
             <div
             key={session.id}
             className='border border-zinc-700 rounded p-3 cursor-pointer'
