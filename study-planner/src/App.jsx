@@ -1,5 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
+import SessionForm from "./components/SessionForm";
+import SessionList from "./components/SessionList";
 
 const App = () => {
   const [sessions, setSessions] = useState([
@@ -20,6 +22,9 @@ const App = () => {
   ]);
 
   const [selectedDay, setSelectedDay] = useState("All");
+  const [subject, setSubject] = useState("");
+  const [day, setDay] = useState("Monday");
+  const [duration, setDuration] = useState(30);
 
   const toggleCompleted = (id) => {
     setSessions((prevSessions) =>
@@ -41,6 +46,24 @@ const App = () => {
     (session) => session.day === selectedDay
   );
 
+  const addSession = () => {
+    if (!subject.trim()) return;
+
+    setSessions((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        subject,
+        day,
+        duration,
+        completed: false,
+      },
+    ]);
+
+    setSubject("");
+    setDuration(30);
+  };
+
 
 
   return (
@@ -56,55 +79,28 @@ const App = () => {
           Plan your study sessions clearly
         </p>
 
-        <div className='mb-4 flex gap-2'>
-          {["All", "Monday", "Tuesday", "Wednesday"].map((day) => (
-            <button
-            key={day}
-            onClick={() => setSelectedDay(day)}
-            className={`px-3 py-1 rounded text-sm ${
-              selectedDay === day
-              ? "bg-white text-black"
-              : "bg-zinc-800 text-gray-300"
-            }`}
-            >
-              {day}
+  <SessionForm
+  subject={subject}
+  setSubject={setSubject}
+  day={day}
+  setDay={setDay}
+  duration={duration}
+  setDuration={setDuration}
+  onAdd={addSession}
+/>
 
-            </button>
-          ))}   
-          
-        </div>
+<div className="flex justify-between mb-4 text-sm text-gray-300">
+  <p>Total: {totalSessions}</p>
+  <p>Completed: {completedSessions}</p>
+</div>
 
-        <div className='flex justify-between mb-4 text-sm text-gray-300'>
-          <p>Total: {totalSessions}</p>
-          <p>Completed: {completedSessions}</p>
-        </div>
+<SessionList
+  sessions={visibleSessions}
+  onToggle={toggleCompleted}
+/>
 
 
-        <div className='border border-zinc-700 rounded p-4'>
-          <p className='text-gray-500'>
-            Study sessions will appear here
-          </p>
-        </div>
-
-        <div className='space-y-3'>
-          {visibleSessions.map((session) => (
-            <div
-            key={session.id}
-            className='border border-zinc-700 rounded p-3 cursor-pointer'
-            onClick={() => toggleCompleted(session.id)}
-            >
-              <p>
-                {session.day} . {session.duration} minutes
-              </p>
-
-              <p className='text-gray-500 text-sm'>
-                Status: {session.completed ? "Completed" : "Pending"}
-              </p>
-
-            </div>
-          ))}
-        </div>
-
+    
       </div>
     </div>
   )
