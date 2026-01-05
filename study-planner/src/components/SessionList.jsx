@@ -10,10 +10,10 @@ function SessionList({ sessions, onToggle }) {
           <p className="font-semibold">
             {session.subject}
           </p>
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-300 text-sm">
             {session.day} • {session.duration} minutes
           </p>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-300 text-sm">
             Status: {session.completed ? "Completed" : "Pending"}
           </p>
         </div>

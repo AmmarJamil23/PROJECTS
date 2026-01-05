@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SessionForm from "../components/SessionForm";
 import SessionList from "../components/SessionList";
+import { fetchSessions } from "../api/fakeSessionApi.js";
 
 function Planner() {
   // Core source of truth
+  const [loading, setLoading] = useState(true);
+
   const [sessions, setSessions] = useState([
     {
       id: 1,
@@ -19,6 +22,13 @@ function Planner() {
       duration: 45,
       completed: true,
     },
+    {
+      id:3,
+      subject: "Chemistry",
+      day: "Tuesday",
+      duration: 90,
+      completed: true
+    }
   ]);
 
   // Filter state
@@ -69,8 +79,28 @@ function Planner() {
     setDuration(30);
   };
 
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchSessions().then((data) => {
+      if (isMounted) {
+        setSessions(data);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    }
+    
+  }, [])
+
+  if (loading) {
   return (
     <div>
+      <p className="text-gray-400 text-center">
+        Loading study sessions...
+      </p>
       {/* Form */}
       <SessionForm
         subject={subject}
@@ -112,6 +142,7 @@ function Planner() {
       />
     </div>
   );
+}
 }
 
 export default Planner;

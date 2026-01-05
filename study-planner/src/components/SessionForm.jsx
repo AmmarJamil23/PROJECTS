@@ -34,7 +34,7 @@ function SessionForm({
       />
 
       <button
-        className="bg-white text-black rounded px-3 text-sm"
+        className="bg-white text-black rounded px-3 text-sm "
         onClick={onAdd}
       >
         Add
