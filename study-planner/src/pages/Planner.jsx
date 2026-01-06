@@ -21,13 +21,6 @@ function Planner() {
       day: "Tuesday",
       duration: 45,
       completed: true,
-    },
-    {
-      id:3,
-      subject: "Chemistry",
-      day: "Tuesday",
-      duration: 90,
-      completed: true
     }
   ]);
 
@@ -94,55 +87,52 @@ function Planner() {
     }
     
   }, [])
+return (
+  <div className="space-y-4">
+    <SessionForm
+      subject={subject}
+      setSubject={setSubject}
+      day={day}
+      setDay={setDay}
+      duration={duration}
+      setDuration={setDuration}
+      onAdd={addSession}
+    />
 
-  if (loading) {
-  return (
-    <div>
-      <p className="text-gray-400 text-center">
-        Loading study sessions...
-      </p>
-      {/* Form */}
-      <SessionForm
-        subject={subject}
-        setSubject={setSubject}
-        day={day}
-        setDay={setDay}
-        duration={duration}
-        setDuration={setDuration}
-        onAdd={addSession}
-      />
-
-      {/* Filters */}
-      <div className="mb-4 flex gap-2">
-        {["All", "Monday", "Tuesday", "Wednesday"].map((d) => (
-          <button
-            key={d}
-            onClick={() => setSelectedDay(d)}
-            className={`px-3 py-1 rounded text-sm ${
-              selectedDay === d
-                ? "bg-white text-black"
-                : "bg-zinc-800 text-gray-300"
-            }`}
-          >
-            {d}
-          </button>
-        ))}
-      </div>
-
-      {/* Stats */}
-      <div className="flex justify-between mb-4 text-sm text-gray-300">
-        <p>Total: {totalSessions}</p>
-        <p>Completed: {completedSessions}</p>
-      </div>
-
-      {/* List */}
-      <SessionList
-        sessions={visibleSessions}
-        onToggle={toggleCompleted}
-      />
+    <div className="mb-4 flex gap-2">
+      {["All", "Monday", "Tuesday", "Wednesday"].map((d) => (
+        <button
+          key={d}
+          onClick={() => setSelectedDay(d)}
+          className={`px-3 py-1 rounded text-sm ${
+            selectedDay === d
+              ? "bg-white text-black"
+              : "bg-zinc-800 text-gray-300"
+          }`}
+        >
+          {d}
+        </button>
+      ))}
     </div>
-  );
+
+    <div className="flex justify-between text-sm text-gray-300">
+      <p>Total: {totalSessions}</p>
+      <p>Completed: {completedSessions}</p>
+    </div>
+
+    {sessions.length === 0 && (
+      <p className="text-gray-500 text-sm">
+        No study sessions yet. Add one above.
+      </p>
+    )}
+
+    <SessionList
+      sessions={visibleSessions}
+      onToggle={toggleCompleted}
+    />
+  </div>
+);
 }
-}
+
 
 export default Planner;
