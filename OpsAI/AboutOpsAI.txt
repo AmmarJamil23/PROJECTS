@@ -1,0 +1,37 @@
+OpsAI is a full stack web platoform that collects operational data, stores it securely, visualizes it in a production grade UI, and uses open source AI models to generate intelligent summaries and insights.
+
+CORE SYSTEM ARCHITECTURE
+
+User
+=> Frontend (React + tailwind)
+=> Backend API (business logic)
+=> Database
+=> AI Service
+
+
+ARCHITECTURE RESPONSIBILITIES
+FRONEND RESPONSIBILITIES
+- Display data
+- Collect user input
+- Call APIs
+- Handle UI state
+- Never talk directly to Database
+- Never talk directly to AI
+
+BACKEND RESPONSIBILITIES
+- Authentication
+- Authorization
+- Validation
+- Business rules
+- Data Aggregation
+- Decide When AI is needed
+
+AI Service RESPONSIBILITIES
+- Generate summaries
+- Generate insights
+- Never store data
+- Never decide permissions
+
+
+Note:
+AI is slow , probablistic, and sometims wrong. so se must isolate it so failures do not break my system.
