@@ -13,18 +13,14 @@ export default function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* Default open register */}
         <Route path="/" element={<Navigate to="/register" replace />} />
          
          <Route path="/login" element={<Login />} />
 
-        {/* Register */}
         <Route path="/register" element={<Register />} />
 
-        {/* Dashboard main */}
         <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Dashboard sub pages */}
         <Route path="/dashboard/projects" element={<Projects />} />
         <Route
           path="/dashboard/projects/:projectId"

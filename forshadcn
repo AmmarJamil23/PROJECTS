@@ -1,0 +1,24 @@
+Create a jsconfig.json file (if you don’t have tsconfig.json)
+
+Since your project is React + Vite + JavaScript, you need jsconfig.json.
+
+Create this file at root of your frontend:
+
+jsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
+
+
+If you already have tsconfig.json, then add the same "paths" there.
+
+✅ 2. Restart the terminal (important for Vite to pick up aliases)
+
+Close the terminal → open again → run:
+
+npx shadcn@latest init

@@ -12,7 +12,7 @@ export const useActivityStore = create(() => ({
     },
     {
       _id: "a2",
-      user: "John Doe",
+      user: "Ali ",
       action: "updated the task",
       target: "Set up backend API",
       time: "5 hours ago",
