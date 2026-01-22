@@ -12,9 +12,16 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@langchain/openai": "^1.2.3",
+    "@langchain/textsplitters": "^1.0.1",
+    "@supabase/supabase-js": "^2.91.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "langchain": "^1.2.11",
+    "multer": "^2.0.2",
+    "pdf-parse": "^1.1.1",
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "jest": "^30.2.0",

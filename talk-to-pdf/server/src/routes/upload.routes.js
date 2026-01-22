@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const uploadController = require("./controllers/upload.controller") ;
+const upload = require("../config/multer");
+const uploadController = require("../controllers/upload.controller") ;
 
-router.post("/", uploadController.uploadPdf);
+router.post("/", upload.single("pdf") ,uploadController.uploadPdf);
 
 module.exports = router;
