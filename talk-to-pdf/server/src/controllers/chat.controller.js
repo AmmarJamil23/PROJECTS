@@ -1,6 +1,7 @@
 const { OpenAIEmbeddings, ChatOpenAI } = require("@langchain/openai");
 const { createClient } = require("@supabase/supabase-js");
-const { PromptTemplate } = require("langchain/prompts");
+const { PromptTemplate } = require("@langchain/core/prompts");
+
 
 const supabase = createClient(
     process.env.SUPABASE_URL,
