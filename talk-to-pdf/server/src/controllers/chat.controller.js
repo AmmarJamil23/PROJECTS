@@ -39,28 +39,34 @@ const chat = async (req, res) => {
         const context = data.map(d => d.content).join("\n\n");
 
         const prompt = new PromptTemplate({
-            template : `
-            You are an AI assistant answering questions based only on the context below.
-            Context: 
-            {context}
-
-            Question:
-            {question}
-            If the answer is not in the content, say " I dont know"
-            `,
-            inputVariables: ["context", "question"]
+        template: `
+        Answer strictly using the provided context.
+        Do not guess.
+        If answer is not in context, say "I do not know".
+        Context:
+        {context}
+        Question:
+        {question}
+        `,
+        inputVariables: ["context", "question"]
         });
+
 
         const finalPrompt = await prompt.format({
             context,
             question
         });
 
-        const response = await model.invoke(finalPrompt);
+        res.setHeader("Content-Type", "text/plain");
+        res.setHeader("Transfer-Encoding", "chunked");
 
-        res.status(200).json({
-            answer: response.content
-        });
+        const stream = await model.stream(finalPrompt);
+
+        for await (const chunk of stream) {
+            res.write(chunk.content || "");
+        }
+
+        res.end();
 
     } catch (err) {
         console.error(err);

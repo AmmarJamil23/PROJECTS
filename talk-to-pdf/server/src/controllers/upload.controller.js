@@ -14,8 +14,18 @@ const uploadPdf = async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    const pdfData = await pdfParse(req.file.buffer);
+    let pdfData;
+    try {
+      pdfData = await pdfParse(req.file.buffer);
+    } catch (err) {
+      return res.status(400).json({ error: "PDF is encrypted or unreadable" });
+    }
+
     const text = pdfData.text;
+
+    if (!text || text.trim().length === 0) {
+      return res.status(400).json({ error: "PDF contains no extractable text" });
+    }
 
     const splitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,
