@@ -1,6 +1,7 @@
 import { extractTextFromPDF } from "../services/pdf.service.js"
 import { chunkText } from "../services/chunk.service.js"
 import { embeddings } from "../services/embedding.service.js"
+import { storeChunks } from "../services/vector.service.js"
 
 export const uploadResume = async (req, res) => {
   if (!req.file) {
@@ -11,7 +12,14 @@ export const uploadResume = async (req, res) => {
 
   const chunks = chunkText(text)
 
-  const firstEmbedding = await embeddings.embedQuery(chunks[0])
+  const vectors = []
+
+  for (const chunk of chunks) {
+    const embedding = await embeddings.embedQuery(chunk)
+    vectors.push({ text: chunk, embedding })
+  }
+
+  await storeChunks(vectors)
 
   res.json({
     message: "PDF parsed successfully",
