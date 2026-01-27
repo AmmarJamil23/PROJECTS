@@ -1,5 +1,6 @@
-import app from "./app.js"
 import "dotenv/config.js"
+
+import app from "./app.js"
 
 const PORT = 4000
 

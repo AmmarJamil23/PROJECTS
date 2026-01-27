@@ -9,7 +9,6 @@ export const uploadResume = async (req, res) => {
   }
 
   const text = await extractTextFromPDF(req.file.path)
-
   const chunks = chunkText(text)
 
   const vectors = []
@@ -22,9 +21,7 @@ export const uploadResume = async (req, res) => {
   await storeChunks(vectors)
 
   res.json({
-    message: "PDF parsed successfully",
-    chunkCount: chunks.length,
-    embeddingLength: firstEmbedding
-    .length
+    message: "Resume stored in vector DB",
+    chunksStored: vectors.length
   })
 }
