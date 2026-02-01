@@ -1,0 +1,1 @@
+1536 is the OPenAI embedding dimension.
