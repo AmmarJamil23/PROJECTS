@@ -2,10 +2,8 @@ name: Resume JD Matcher CI
 
 on:
   push:
-    branches: [ main ]
-
   pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 
 jobs:
@@ -19,30 +17,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
 
       - name: Install backend dependencies
         run: |
           cd server
           npm install
 
-
       - name: Verify backend loads
         run: |
           cd server
           node -e "require('./server.js')"
 
-
       - name: Install frontend dependencies
         run: |
           cd client
           npm install
-
 
       - name: Build frontend
         run: |
