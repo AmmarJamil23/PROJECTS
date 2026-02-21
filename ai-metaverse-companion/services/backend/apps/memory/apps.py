@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class MemoryConfig(AppConfig):
-    name = 'memory'
+    name = 'apps.memory'
