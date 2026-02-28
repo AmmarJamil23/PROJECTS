@@ -1,18 +1,15 @@
-import requests
 import os
 
-from .base_provider import BaseAgentProvider
+from .letta_provider import LettaProvider
 
-class LettaProvider(BaseAgentProvider):
+class ProvideFactory:
 
-    def __init__(self):
+    @staticmethod
+    def get_agent_provider():
 
-        self.api_key = os.getenv("LETTA_API_KEY")
+        provider = os.getenv("AGENT_PROVIDER", "letta")
 
-        self.base_url = "https://api.letta.com/v1"
+        if provider == "letta":
+            return LettaProvider()
 
-
-    def generate_response(self, session_id: str, message: str) -> str:
-
-        url = f"{self.base_url}/agents/respond"
-       
+        raise Exception("Invalid provider")
