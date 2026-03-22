@@ -1,13 +1,17 @@
 // ProductDetailPage.jsx — shows details for a single product
+
 import React from 'react';
-// import { useParams } from 'react-router-dom';
-// import { useProduct } from '../hooks'; // To be implemented
+import { useParams } from 'react-router-dom';
+import { useProduct } from '../hooks';
 
 export default function ProductDetailPage() {
-  // const { id } = useParams();
-  // const { data: product, isLoading } = useProduct(id);
-  const product = null; // Placeholder
-  if (!product) {
+  const { id } = useParams();
+  const { data: product, isLoading, isError } = useProduct(id);
+
+  if (isLoading) {
+    return <div className="max-w-2xl mx-auto py-12 text-center text-ink-600">Loading product...</div>;
+  }
+  if (isError || !product) {
     return <div className="max-w-2xl mx-auto py-12 text-center text-ink-600">Product not found.</div>;
   }
   return (

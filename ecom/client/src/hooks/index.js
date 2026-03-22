@@ -1,6 +1,8 @@
 // Custom hooks for ShopCraft
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { productService } from '../services/productService';
 
 // useFilters: manages filtering, sorting, and search state for products
 export function useFilters(products = []) {
@@ -70,4 +72,23 @@ export function useScrollLock(locked) {
     document.body.style.overflow = locked ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [locked]);
+}
+
+// Fetch all products with React Query
+export function useProducts() {
+  return useQuery({
+    queryKey: ['products'],
+    queryFn: productService.getAll,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+}
+
+// Fetch a single product by ID with React Query
+export function useProduct(id) {
+  return useQuery({
+    queryKey: ['product', id],
+    queryFn: () => productService.getById(id),
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+  });
 }
